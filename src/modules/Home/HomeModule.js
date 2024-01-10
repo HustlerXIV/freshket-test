@@ -33,6 +33,7 @@ const Box = styled.div`
   height: 500px;
   border: 1px solid black;
   border-radius: 16px;
+  margin: 0 20px;
 `;
 
 const ButtonContainer = styled.div`

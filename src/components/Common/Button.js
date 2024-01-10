@@ -25,6 +25,10 @@ const StyledButton = styled.button`
   text-decoration: none;
   cursor: pointer;
   width: ${({ width }) => `${width}px`};
+
+  @media (max-width: 576px) {
+    width: auto;
+  }
 `;
 
 export default Button;

@@ -4,6 +4,7 @@ import Container from "../../components/Common/Container";
 import { styled } from "styled-components";
 import Member from "../../components/Item/Member";
 import { postData } from "../../utils/apiData";
+import Loader from "../../components/Common/Loader";
 
 const colors = [
   {
@@ -40,6 +41,8 @@ const CalculatorModule = () => {
   const [quantities, setQuantities] = useState([]);
   const [total, setTotal] = useState(0);
   const [isMember, setIsMember] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handleOnChange = (color, quantity) => {
     if (quantity === 0) {
       setQuantities((prevQuantities) =>
@@ -75,31 +78,37 @@ const CalculatorModule = () => {
       isMember,
     };
     try {
+      setLoading(true);
       const totalPrice = await postData("market/calculatePrice", data);
       setTotal(totalPrice);
     } catch (error) {
       console.error("Error calculating price:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container center>
-      <ItemContainer>
-        {colors.map(({ color }, index) => (
-          <Item
-            key={index}
-            bgColor={color}
-            onChange={(quantity) => handleOnChange(color, quantity)}
-          />
-        ))}
-        <Member onChange={setIsMember} />
-        <TotalContainer>
-          Total:
-          <b>{total}</b>
-          <button onClick={handleOnClick}>Calculate</button>
-        </TotalContainer>
-      </ItemContainer>
-    </Container>
+    <>
+      {loading && <Loader />}
+      <Container center>
+        <ItemContainer>
+          {colors.map(({ color }, index) => (
+            <Item
+              key={index}
+              bgColor={color}
+              onChange={(quantity) => handleOnChange(color, quantity)}
+            />
+          ))}
+          <Member onChange={setIsMember} />
+          <TotalContainer>
+            Total:
+            <b>{total}</b>
+            <button onClick={handleOnClick}>Calculate</button>
+          </TotalContainer>
+        </ItemContainer>
+      </Container>
+    </>
   );
 };
 
